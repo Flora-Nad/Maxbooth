@@ -1,0 +1,20 @@
+[build]
+  publish = "."
+
+# Alias bersih untuk booth
+[[redirects]]
+  from = "/booth"
+  to = "/booth/index.html"
+  status = 200
+
+# Header keamanan + izin kamera (HTTPS sudah otomatis dari Netlify)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/booth/*"
+  [headers.values]
+    Permissions-Policy = "camera=(self), microphone=()"

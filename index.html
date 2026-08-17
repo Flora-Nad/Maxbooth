@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boothin — Photo Booth SaaS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%B8%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bricolage-grotesque/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bricolage-grotesque/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-mono/400.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{cream:'#FAF5EC',paper:'#FFFCF4',ink:'#1C1917',coral:'#FF4B2B',sun:'#FFC53D'},
+fontFamily:{display:['"Bricolage Grotesque"','sans-serif'],body:['Inter','sans-serif'],mono:['"Space Mono"','monospace']}}}}
+</script>
+<style>
+  body{background-color:#FAF5EC;background-image:radial-gradient(rgba(28,25,23,.07) 1.1px,transparent 1.1px);background-size:22px 22px}
+  .card-hover{transition:transform .2s ease,box-shadow .2s ease}
+  .card-hover:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 #1C1917}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-10px) rotate(var(--r,0deg))}}
+  .floaty{animation:floaty 5s ease-in-out infinite}
+</style>
+</head>
+<body class="text-ink font-body min-h-screen flex flex-col">
+
+<header class="max-w-5xl mx-auto w-full px-6 py-6 flex items-center justify-between">
+  <div class="flex items-center gap-2.5">
+    <span class="w-10 h-10 bg-coral border-2 border-ink rounded-xl grid place-items-center text-xl shadow-[4px_4px_0_#1C1917]">📸</span>
+    <span class="font-display font-extrabold text-2xl">Boothin<span class="text-coral">.</span></span>
+  </div>
+  <span class="font-mono text-xs bg-sun border-2 border-ink rounded-full px-3 py-1 font-bold">DEMO v0.3</span>
+</header>
+
+<main class="flex-1 max-w-5xl mx-auto w-full px-6 py-10">
+  <div class="text-center max-w-2xl mx-auto">
+    <h1 class="font-display font-extrabold text-4xl sm:text-5xl tracking-tight leading-tight">Photo booth digital<br>dalam satu kotak. 🎪</h1>
+    <p class="mt-4 text-ink/70 text-lg">Bayar QRIS → pilih frame & filter → foto → cetak thermal 80mm → share digital. Pilih modul yang mau kamu coba:</p>
+  </div>
+
+  <div class="mt-12 grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+    <a href="/booth" class="card-hover block bg-paper border-[3px] border-ink rounded-3xl p-8 shadow-[6px_6px_0_#1C1917]">
+      <div class="w-14 h-14 bg-coral border-2 border-ink rounded-2xl grid place-items-center text-2xl">🎪</div>
+      <h2 class="font-display font-extrabold text-2xl mt-5">Booth Kiosk</h2>
+      <p class="text-ink/65 mt-2">Aplikasi booth lengkap: QRIS (simulasi), 6 frame, 8 filter, cetak & share. Buka di tablet untuk tes kamera.</p>
+      <span class="inline-block mt-5 font-bold text-coral">Masuk Booth →</span>
+    </a>
+    <div class="relative block bg-paper border-[3px] border-ink rounded-3xl p-8 shadow-[6px_6px_0_#1C1917] opacity-80">
+      <span class="absolute top-4 right-4 font-mono text-[10px] bg-ink text-cream rounded-full px-2.5 py-1">SEGERA</span>
+      <div class="w-14 h-14 bg-sun border-2 border-ink rounded-2xl grid place-items-center text-2xl">📊</div>
+      <h2 class="font-display font-extrabold text-2xl mt-5">Dashboard Operator</h2>
+      <p class="text-ink/65 mt-2">Laporan penjualan per kotak, kelola tema & frame, manajemen langganan. Tahap pengembangan berikutnya.</p>
+      <span class="inline-block mt-5 font-bold text-ink/40">Segera hadir</span>
+    </div>
+  </div>
+
+  <div class="mt-12 text-center font-mono text-xs text-ink/50 space-y-1">
+    <p>💡 Tips: buka <span class="font-bold">/booth</span> di tablet/HP, lalu tekan ⚙️ di pojok kanan bawah untuk Panel Operator.</p>
+    <p>Kamera membutuhkan HTTPS — otomatis aktif di Netlify.</p>
+  </div>
+</main>
+
+<footer class="max-w-5xl mx-auto w-full px-6 py-8 flex flex-col sm:flex-row justify-between gap-2 font-mono text-xs text-ink/45 border-t-2 border-dashed border-ink/20">
+  <p>© 2025 Boothin — Photo Booth SaaS untuk UMKM & EO</p>
+  <p>EP-80ECO • 80MM • BT/USB</p>
+</footer>
+
+<div class="floaty fixed bottom-6 right-6 hidden md:grid w-20 h-28 bg-white border-2 border-ink rounded-lg p-1.5 shadow-[6px_6px_0_#1C1917] place-items-center" style="--r:6deg">
+  <div class="space-y-1 w-full"><div class="h-5 bg-sun rounded-sm"></div><div class="h-5 bg-coral/60 rounded-sm"></div><div class="h-5 bg-sun/70 rounded-sm"></div></div>
+</div>
+
+</body>
+</html>
