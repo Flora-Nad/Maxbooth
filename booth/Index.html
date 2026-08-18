@@ -23,68 +23,11 @@ tailwind.config = { theme: { extend: { fontFamily: {
   mono: ['"Space Mono"','monospace'],
 }}}}
 </script>
-<style>
-  :root{--bg:#FAF5EC;--surface:#FFFCF4;--ink:#1C1917;--accent:#FF4B2B;--accent2:#FFC53D;--shadow:8px 8px 0 rgba(28,25,23,1);--soft:rgba(28,25,23,.12);}
-  *{-webkit-tap-highlight-color:transparent}
-  html,body{height:100%;overflow:hidden}
-  body{background:var(--bg);color:var(--ink);transition:background .5s ease,color .5s ease}
-  ::selection{background:var(--accent2)}
-  #bgPattern{position:fixed;inset:0;z-index:0;pointer-events:none}
-  body[data-pattern="dots"] #bgPattern{background-image:radial-gradient(color-mix(in srgb,var(--ink) 13%,transparent) 1.3px,transparent 1.3px);background-size:24px 24px}
-  body[data-pattern="grid"] #bgPattern{background-image:linear-gradient(color-mix(in srgb,var(--ink) 14%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--ink) 14%,transparent) 1px,transparent 1px);background-size:34px 34px}
-  body[data-pattern="stripes"] #bgPattern{background-image:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ink) 10%,transparent) 0 16px,transparent 16px 34px)}
-  body[data-pattern="waves"] #bgPattern{background-image:repeating-radial-gradient(circle at 0 0,transparent 0 34px,color-mix(in srgb,var(--ink) 10%,transparent) 34px 36px)}
-  body[data-pattern="petals"] #bgPattern{background-image:radial-gradient(color-mix(in srgb,var(--accent) 26%,transparent) 3px,transparent 3.5px),radial-gradient(color-mix(in srgb,var(--accent2) 40%,transparent) 2px,transparent 2.5px);background-size:56px 56px,38px 38px;background-position:0 0,19px 24px}
-  .screen{position:fixed;inset:0;z-index:10;display:flex;opacity:0;pointer-events:none;transform:scale(.985);transition:opacity .4s ease,transform .4s ease}
-  .screen.active{opacity:1;pointer-events:auto;transform:scale(1)}
-  .card{background:var(--surface);border:3px solid var(--ink);box-shadow:var(--shadow);transition:background .5s,border-color .5s,box-shadow .5s}
-  .btn{cursor:pointer;user-select:none;transition:transform .15s ease,box-shadow .15s ease,background .3s,color .3s}
-  .btn-press:active{transform:translate(4px,4px);box-shadow:0 0 0 0 !important}
-  .chip-f{transition:all .18s ease}
-  .chip-f.on{background:var(--accent);color:var(--surface);border-color:var(--ink);transform:translateY(-2px)}
-  .frame-card{transition:all .18s ease}
-  .frame-card.on{outline:3px solid var(--ink);outline-offset:2px;transform:translateY(-3px);background:color-mix(in srgb,var(--accent2) 30%,var(--surface))}
-  .paymode-btn{border:2px solid var(--ink);border-radius:.75rem;padding:.6rem .4rem;font-weight:700;font-size:.78rem;background:var(--surface);transition:all .18s;width:100%;line-height:1.2}
-  .paymode-btn.on{background:var(--accent);color:var(--surface)}
-  .seg-btn{border:2px solid var(--ink);border-radius:.6rem;padding:.45rem .4rem;font-weight:700;font-size:.7rem;background:var(--surface);transition:all .18s;width:100%}
-  .seg-btn.on{background:var(--ink);color:var(--surface)}
-  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
-  .floaty{animation:floaty 5.5s ease-in-out infinite}
-  @keyframes pulseBig{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
-  .pulse-big{animation:pulseBig 1.6s ease-in-out infinite}
-  @keyframes marquee{to{transform:translateX(-50%)}}
-  .marquee{display:flex;gap:3rem;width:max-content;animation:marquee 22s linear infinite}
-  @keyframes blinkDot{0%,100%{opacity:1}50%{opacity:.2}}
-  .blink{animation:blinkDot 1.1s ease-in-out infinite}
-  @keyframes pop{0%{transform:scale(2.4);opacity:0}45%{transform:scale(1);opacity:1}100%{transform:scale(.92);opacity:.95}}
-  .count-pop{animation:pop .72s cubic-bezier(.2,.8,.3,1) forwards}
-  @keyframes flashAnim{0%{opacity:1}100%{opacity:0}}
-  .flash-on{animation:flashAnim .5s ease-out forwards}
-  @keyframes printOut{from{transform:translateY(-96%)}to{transform:translateY(0)}}
-  .print-anim{animation:printOut 3.4s cubic-bezier(.3,.6,.4,1) both}
-  @keyframes scanline{0%{top:6%}50%{top:88%}100%{top:6%}}
-  .scanline{animation:scanline 2.4s ease-in-out infinite}
-  @keyframes successPop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
-  .success-pop{animation:successPop .5s cubic-bezier(.2,.8,.3,1) forwards}
-  .mirror{transform:scaleX(-1)}
-  #toast{opacity:0;transform:translate(-50%,16px);transition:all .35s cubic-bezier(.2,.8,.2,1)}
-  #toast.toast-on{opacity:1;transform:translate(-50%,0)}
-  #opPanel{transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-  #opPanel.open{transform:translateX(0)}
-  .op-input{width:100%;background:color-mix(in srgb,var(--bg) 60%,var(--surface));border:2px solid var(--ink);border-radius:.75rem;padding:.55rem .8rem;font-weight:600;font-size:.875rem;color:var(--ink)}
-  .op-input:focus{outline:none;box-shadow:3px 3px 0 var(--accent)}
-  .theme-dot{width:100%;aspect-ratio:1.6;border:2.5px solid var(--ink);border-radius:.7rem;cursor:pointer;position:relative;overflow:hidden}
-  .theme-dot.on{outline:3px solid var(--ink);outline-offset:2px}
-  .theme-dot.on::after{content:'✓';position:absolute;right:4px;top:2px;font-weight:900}
-  .sim-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;border:1.5px dashed currentColor;border-radius:999px;padding:2px 10px;opacity:.85}
-  .op-scroll::-webkit-scrollbar{width:8px}
-  .op-scroll::-webkit-scrollbar-thumb{background:var(--ink);border-radius:8px}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body class="font-body" data-pattern="dots">
 <div id="bgPattern"></div>
 
-<!-- ═══ 1. ATTRACT ═══ -->
 <section id="screen-attract" class="screen active items-center justify-center">
   <div class="absolute top-6 left-6 flex items-center gap-3">
     <div id="atLogoBox" class="w-12 h-12 rounded-2xl border-[3px] border-[var(--ink)] bg-[var(--surface)] grid place-items-center text-2xl shadow-[var(--shadow)] overflow-hidden">📸</div>
@@ -92,14 +35,12 @@ tailwind.config = { theme: { extend: { fontFamily: {
   </div>
   <div class="absolute top-6 right-6 font-mono text-xs opacity-60 flex items-center gap-2"><span class="w-2 h-2 rounded-full blink" style="background:var(--accent)"></span> SIAP DIGUNAKAN</div>
   <a href="/" class="absolute bottom-5 left-5 font-mono text-[10px] opacity-40 hover:opacity-80 z-20">← keluar booth</a>
-
   <div class="floaty hidden md:block absolute left-[7%] top-[20%] w-36 card rounded-xl p-2" style="--r:-7deg">
     <div class="space-y-1.5"><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 55%,var(--surface))">🤪</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 30%,var(--surface))">✌️</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 35%,var(--surface))">🥳</div></div>
   </div>
   <div class="floaty hidden md:block absolute right-[8%] top-[30%] w-36 card rounded-xl p-2" style="--r:6deg;animation-delay:.9s">
     <div class="space-y-1.5"><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 26%,var(--surface))">😎</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 50%,var(--surface))">🎉</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 40%,var(--surface))">😜</div></div>
   </div>
-
   <div class="relative z-10 text-center px-6 max-w-2xl">
     <p class="font-mono text-sm tracking-[.25em] opacity-70 mb-4">SELF-SERVICE PHOTO BOOTH</p>
     <h1 class="font-display font-extrabold text-5xl sm:text-7xl leading-none tracking-tight">Foto seru,<br>langsung <span style="color:var(--accent)">cetak!</span></h1>
@@ -115,7 +56,6 @@ tailwind.config = { theme: { extend: { fontFamily: {
       <button id="btnStart" class="btn btn-press pulse-big font-display font-extrabold text-2xl px-12 py-6 rounded-3xl border-[3px] border-[var(--ink)] shadow-[var(--shadow)]" style="background:var(--accent);color:var(--surface)">💳 Scan QRIS untuk Mulai</button>
     </div>
   </div>
-
   <div class="absolute bottom-0 inset-x-0 overflow-hidden py-3 border-t-[3px]" style="border-color:var(--ink);background:var(--ink);color:var(--bg)">
     <div class="marquee font-mono text-sm font-bold">
       <span>⚡ BAYAR QRIS</span><span>🖼 6 FRAME</span><span>🎨 8 FILTER</span><span>🖨 CETAK 80MM</span><span>📲 SHARE DIGITAL</span><span>🔄 RETAKE GRATIS</span>
@@ -123,8 +63,6 @@ tailwind.config = { theme: { extend: { fontFamily: {
     </div>
   </div>
 </section>
-
-<!-- ═══ 2. PEMBAYARAN (STATIS / MIDTRANS) ═══ -->
 <section id="screen-payment" class="screen items-center justify-center p-6">
   <div class="card rounded-[2rem] p-8 sm:p-10 w-full max-w-md text-center relative">
     <span id="paySimBadge" class="sim-badge absolute top-4 right-4">MODE LITE</span>
@@ -132,8 +70,6 @@ tailwind.config = { theme: { extend: { fontFamily: {
     <h2 class="font-display font-extrabold text-3xl mt-2">Bayar QRIS</h2>
     <p id="payModeTag" class="font-mono text-[11px] mt-1 opacity-60">🖼 QRIS STATIS</p>
     <p id="payPrice" class="font-display font-extrabold text-4xl mt-3" style="color:var(--accent)">Rp 15.000</p>
-
-    <!-- DYNAMIC / MIDTRANS -->
     <div id="payDynamicWrap" class="mt-6 relative mx-auto w-fit hidden">
       <div class="bg-white border-[3px] border-[var(--ink)] rounded-2xl p-5 relative shadow-[var(--shadow)]">
         <canvas id="qrCanvas"></canvas>
@@ -146,8 +82,6 @@ tailwind.config = { theme: { extend: { fontFamily: {
         </div>
       </div>
     </div>
-
-    <!-- STATIC -->
     <div id="payStaticWrap" class="mt-6 relative mx-auto w-fit hidden">
       <div class="bg-white border-[3px] border-[var(--ink)] rounded-2xl p-4 relative shadow-[var(--shadow)]">
         <img id="payStaticImg" class="hidden w-[220px] h-[220px] object-contain rounded-lg" alt="QRIS">
@@ -161,19 +95,15 @@ tailwind.config = { theme: { extend: { fontFamily: {
         </div>
       </div>
     </div>
-
     <p id="payStatus" class="mt-5 font-semibold flex items-center justify-center gap-2">
       <span class="w-2.5 h-2.5 rounded-full blink" style="background:var(--accent2)"></span> Menunggu pembayaran…
     </p>
     <p class="font-mono text-[11px] opacity-50 mt-1">Mandiri · BCA · GoPay · OVO · Dana · ShopeePay</p>
-
     <button id="payConfirmBtn" class="hidden btn btn-press mt-5 w-full py-4 rounded-2xl border-[3px] border-[var(--ink)] font-display font-extrabold text-lg shadow-[var(--shadow)]" style="background:#22C55E;color:#fff">✅ Saya Sudah Bayar — Lanjut</button>
     <button id="btnCancelPay" class="btn btn-press mt-4 px-6 py-3 border-[3px] border-[var(--ink)] rounded-xl font-bold bg-[var(--surface)] shadow-[4px_4px_0_var(--ink)]">Batalkan</button>
   </div>
-</section>
-
-<!-- ═══ 3. PERSIAPAN ═══ -->
-<section id="screen-setup" class="screen items-center justify-center p-4 sm:p-6">
+  </section>
+  <section id="screen-setup" class="screen items-center justify-center p-4 sm:p-6">
   <div class="w-full max-w-5xl grid md:grid-cols-[1.1fr,1fr] gap-6 items-stretch">
     <div class="card rounded-[2rem] p-5 flex flex-col">
       <div class="flex items-center justify-between mb-3">
@@ -202,7 +132,6 @@ tailwind.config = { theme: { extend: { fontFamily: {
   </div>
 </section>
 
-<!-- ═══ 4. CAPTURE ═══ -->
 <section id="screen-capture" class="screen items-center justify-center p-4">
   <div class="relative w-full max-w-3xl">
     <div class="relative card rounded-[2rem] overflow-hidden">
@@ -224,8 +153,6 @@ tailwind.config = { theme: { extend: { fontFamily: {
     </div>
   </div>
 </section>
-
-<!-- ═══ 5. PREVIEW ═══ -->
 <section id="screen-preview" class="screen items-center justify-center p-4 sm:p-6">
   <div class="w-full max-w-4xl grid md:grid-cols-[auto,1fr] gap-7 items-center">
     <div class="mx-auto">
@@ -242,4 +169,125 @@ tailwind.config = { theme: { extend: { fontFamily: {
       <div class="mt-7 space-y-3.5">
         <button id="btnPrint" class="btn btn-press w-full font-display font-extrabold text-xl py-5 rounded-2xl border-[3px] border-[var(--ink)] shadow-[var(--shadow)]" style="background:var(--accent);color:var(--surface)">🖨️ Cetak Sekarang</button>
         <button id="btnRetake" class="btn btn-press w-full font-bold text-lg py-4 rounded-2xl border-[3px] border-[var(--ink)] shadow-[4px_4px_0_var(--ink)] bg-[var(--surface)]">🔄 Foto Ulang — Gratis</button>
-        <button id="btnC
+        <button id="btnChangeStyle" class="btn w-full py-2.5 font-semibold text-sm opacity-70 hover:opacity-100">🎨 Ganti frame & filter</button>
+      </div>
+      <p class="font-mono text-[11px] opacity-50 mt-4">Setelah dicetak, sesi dianggap selesai ya!</p>
+    </div>
+  </div>
+  </section>
+<section id="screen-print" class="screen items-center justify-center p-6">
+  <div class="card rounded-[2rem] p-8 sm:p-10 text-center w-full max-w-md relative">
+    <span class="sim-badge absolute top-4 right-4">SIMULASI CETAK</span>
+    <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 4/4 — MENCETAK</p>
+    <h2 id="printTitle" class="font-display font-extrabold text-3xl mt-2">Mencetak strip kamu…</h2>
+    <div class="mt-7 mx-auto w-56">
+      <div class="relative rounded-2xl border-[3px] border-[var(--ink)] p-3 pb-1" style="background:var(--ink);color:var(--bg)">
+        <p class="font-mono text-[10px] flex justify-between opacity-90"><span>EP-80ECO</span><span>80MM • BT/USB</span></p>
+        <div class="mt-2 h-2.5 rounded-full overflow-hidden" style="background:color-mix(in srgb,var(--bg) 25%,var(--ink))">
+          <div id="printBar" class="h-full rounded-full transition-all duration-300" style="width:5%;background:var(--accent2)"></div>
+        </div>
+      </div>
+      <div class="mx-auto w-44 mt-[-2px] border-x-[3px] border-b-[3px] border-[var(--ink)] rounded-b-xl overflow-hidden" style="height:300px">
+        <img id="printStripImg" class="w-full print-anim" alt="Strip keluar printer">
+      </div>
+    </div>
+    <p id="printStatus" class="mt-5 font-mono text-sm opacity-70">Mengirim data ke printer thermal…</p>
+  </div>
+</section>
+
+<section id="screen-share" class="screen items-center justify-center p-6">
+  <div class="card rounded-[2rem] p-8 sm:p-10 text-center w-full max-w-md">
+    <div class="w-16 h-16 mx-auto rounded-full grid place-items-center text-3xl border-[3px] border-[var(--ink)] success-pop" style="background:#22C55E;color:#fff">✓</div>
+    <h2 class="font-display font-extrabold text-3xl mt-4">Selesai! Ambil fotonya 🎁</h2>
+    <p class="opacity-70 mt-1 font-medium">Scan untuk simpan versi digitalnya.</p>
+    <div class="mt-6 bg-white border-[3px] border-[var(--ink)] rounded-2xl p-5 w-fit mx-auto shadow-[var(--shadow)]">
+      <canvas id="shareQr"></canvas>
+      <p class="font-mono text-[10px] mt-2 text-neutral-500">boothin.id/g/<span id="galleryCode">XXXX</span></p>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mt-6">
+      <button class="shareOpt btn btn-press py-3.5 rounded-xl border-[3px] border-[var(--ink)] font-bold bg-[var(--surface)] shadow-[4px_4px_0_var(--ink)]" data-k="wa">💬 WhatsApp</button>
+      <button class="shareOpt btn btn-press py-3.5 rounded-xl border-[3px] border-[var(--ink)] font-bold bg-[var(--surface)] shadow-[4px_4px_0_var(--ink)]" data-k="email">✉️ Email</button>
+    </div>
+    <p class="font-mono text-xs opacity-55 mt-5">Kembali ke layar awal dalam <span id="shareCount" class="font-bold" style="color:var(--accent)">20</span> dtk</p>
+    <button id="btnFinish" class="btn btn-press mt-4 px-8 py-3 rounded-xl border-[3px] border-[var(--ink)] font-bold shadow-[4px_4px_0_var(--ink)]" style="background:var(--accent2)">Selesai 👋</button>
+  </div>
+</section>
+
+<button id="opToggle" class="btn fixed bottom-4 right-4 z-40 w-12 h-12 rounded-2xl border-[3px] border-[var(--ink)] grid place-items-center text-xl shadow-[4px_4px_0_var(--ink)]" style="background:var(--surface)" title="Panel Operator">⚙️</button>
+<aside id="opPanel" class="fixed top-0 right-0 bottom-0 z-40 w-full max-w-sm border-l-[3px] border-[var(--ink)] p-6 overflow-y-auto op-scroll translate-x-full" style="background:var(--surface)">
+  <div class="flex items-center justify-between">
+    <h3 class="font-display font-extrabold text-2xl">Panel Operator</h3>
+    <button id="opClose" class="btn w-10 h-10 rounded-xl border-[3px] border-[var(--ink)] grid place-items-center font-bold bg-[var(--surface)]">✕</button>
+  </div>
+  <p class="font-mono text-[11px] opacity-55 mt-1">Pengaturan booth — langsung diterapkan. 🔒 Produksi: dikunci PIN.</p>
+  <div class="mt-6">
+    <p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-3">TEMA TAMPILAN</p>
+    <div id="themeGrid" class="grid grid-cols-3 gap-2.5"></div>
+  </div>
+  <div class="mt-5">
+    <p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-2">WARNA UTAMA (CUSTOM)</p>
+    <div class="flex gap-3 items-center">
+      <input id="opColor" type="color" value="#FF4B2B" class="w-14 h-11 rounded-xl border-[3px] border-[var(--ink)] cursor-pointer bg-transparent">
+      <button id="opApplyColor" class="btn btn-press flex-1 py-2.5 rounded-xl border-[3px] border-[var(--ink)] font-bold text-sm bg-[var(--accent2)] shadow-[3px_3px_0_var(--ink)]">Terapkan Warna</button>
+    </div>
+  </div>
+  <div class="mt-5 space-y-4">
+    <div><p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-2">NAMA BRAND</p><input id="opBrand" class="op-input" maxlength="16" value="Boothin"></div>
+    <div><p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-2">LOGO (LAYAR & STRIP)</p><input id="opLogo" type="file" accept="image/*" class="op-input !p-2 text-xs"></div>
+    <div class="grid grid-cols-2 gap-3">
+      <div><p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-2">HARGA (RP)</p><input id="opPrice" type="number" min="1000" step="1000" class="op-input" value="15000"></div>
+      <div><p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-2">JUMLAH POSE</p><select id="opPoses" class="op-input"><option value="2">2 pose</option><option value="3" selected>3 pose</option><option value="4">4 pose</option></select></div>
+    </div>
+  </div>
+  <div class="mt-6 pt-5 border-t-2 border-dashed" style="border-color:var(--soft)">
+    <p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-3">💳 MODE PEMBAYARAN QRIS</p>
+    <div class="grid grid-cols-2 gap-2">
+      <button id="pmStatic" class="paymode-btn on">🖼 Statis<br><span class="font-mono text-[9px] opacity-70">LITE / PEMULA</span></button>
+      <button id="pmMidtrans" class="paymode-btn">⚡ Midtrans<br><span class="font-mono text-[9px] opacity-70">PRO / DINAMIS</span></button>
+    </div>
+    <div id="optsStatic" class="mt-4 space-y-3">
+      <div>
+        <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">UPLOAD GAMBAR QRIS KAMU</p>
+        <input id="opQrisFile" type="file" accept="image/*" class="op-input !p-2 text-xs">
+        <div class="mt-2 bg-white border-2 border-[var(--ink)] rounded-xl p-2 w-fit mx-auto">
+          <img id="opQrisPreview" class="hidden w-28 h-28 object-contain" alt="QRIS">
+          <div id="opQrisEmpty" class="w-28 h-28 grid place-items-center text-neutral-400 text-[10px] text-center font-mono">belum ada<br>QRIS</div>
+        </div>
+      </div>
+      <div>
+        <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">CARA VERIFIKASI PEMBAYARAN</p>
+        <div class="grid grid-cols-2 gap-2">
+          <button id="verifTimer" class="seg-btn on">⏱ Timer Otomatis</button>
+          <button id="verifManual" class="seg-btn">✅ Tombol Manual</button>
+        </div>
+      </div>
+      <div id="timerOpts">
+        <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">DURASI TIMER (DETIK)</p>
+        <input id="opTimerSec" type="number" min="5" max="120" value="15" class="op-input">
+      </div>
+    </div>
+    <div id="optsMidtrans" class="mt-4 space-y-3 hidden">
+      <div><p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">MERCHANT ID</p><input id="opMerchantId" class="op-input font-mono text-xs" placeholder="G123456789"></div>
+      <div><p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">CLIENT KEY</p><input id="opClientId" class="op-input font-mono text-xs" placeholder="SB-Mid-xxxxx"></div>
+      <div><p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">SERVER KEY 🔒</p><input id="opServerKey" type="password" class="op-input font-mono text-xs" placeholder="••••••••"></div>
+      <div>
+        <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">ENVIRONMENT</p>
+        <div class="grid grid-cols-2 gap-2">
+          <button id="envSandbox" class="seg-btn on">🧪 Sandbox</button>
+          <button id="envProd" class="seg-btn">🚀 Production</button>
+        </div>
+      </div>
+      <button id="opTestMt" class="btn btn-press w-full py-2.5 rounded-xl border-[3px] border-[var(--ink)] font-bold text-sm bg-[var(--accent2)] shadow-[3px_3px_0_var(--ink)]">🔌 Tes Koneksi</button>
+      <p class="font-mono text-[9px] opacity-50 leading-relaxed">ℹ Server Key dipakai backend untuk membuat QRIS dinamis & menerima webhook. Uang cair langsung ke rekening merchant kamu (bukan ke Boothin).</p>
+    </div>
+  </div>
+  <button id="opSave" class="btn btn-press mt-7 w-full py-4 rounded-2xl border-[3px] border-[var(--ink)] font-display font-extrabold text-lg shadow-[var(--shadow)]" style="background:var(--accent);color:var(--surface)">💾 Simpan & Terapkan</button>
+  <p class="font-mono text-[10px] opacity-45 mt-3 text-center">Tersimpan otomatis di perangkat ini (localStorage).</p>
+</aside>
+
+<div id="toast" class="fixed bottom-6 left-1/2 z-50 px-6 py-3.5 rounded-full border-[3px] border-[var(--ink)] font-semibold text-sm max-w-[92vw] text-center shadow-[var(--shadow)]" style="background:var(--ink);color:var(--bg)"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+          </html>
