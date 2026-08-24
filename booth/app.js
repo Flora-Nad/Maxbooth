@@ -284,6 +284,14 @@ go('preview');
 /* app.js FINAL (2/2) */
 $('#btnStart').addEventListener('click',
 function(){go('setup');});
+$('#btnBeginCapture').addEventListener('click',
+function(){go('capture');runCapture();});
+$('#btnBackPay').addEventListener('click',
+function(){go('attract');});
+$('#mirrorOn').addEventListener('click',
+function(){state.mirror=true;applyMirror();});
+$('#mirrorOff').addEventListener('click',
+function(){state.mirror=false;applyMirror();});
 $('#btnRetake').addEventListener('click',
 async function(){
 showToast('🔄 Retake — silakan foto ulang!');
