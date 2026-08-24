@@ -280,7 +280,7 @@ $('#frameCaption').textContent='Frame '+fname+
 ' • Filter '+FILTERS[settings.filter];
 state.busy=false;
 go('preview');
-}
+           }
 /* app.js FINAL (2/2) */
 $('#btnStart').addEventListener('click',
 function(){go('setup');});
@@ -549,4 +549,4 @@ buildFrameGrid();renderFsList();
 if(document.fonts&&document.fonts.load){
 document.fonts.load('800 26px "Bricolage Grotesque"');
 document.fonts.load('700 12px "Space Mono"');
-}
+                }
