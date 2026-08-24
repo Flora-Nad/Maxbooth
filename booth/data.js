@@ -312,7 +312,7 @@ function composeStrip(frames){
 return renderStrip(frames,settings.frame,1);
 }
 function placeholderFrames(){
-var emojis=['😜','️','🥳',''];
+var emojis=['😜','✌️','🥳','😎'];
 var t=currentTheme();
 var out=[];
 for(var i=0;i<settings.poses;i++){
