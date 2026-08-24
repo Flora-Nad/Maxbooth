@@ -73,8 +73,7 @@ return;}
 settings.gdClient=cid;saveSettings();
 var redir=location.origin+location.pathname;
 var scope='https://www.googleapis.com/auth/drive.file';
-var url='https://accounts.google.com/o/oauth2/v2.auth';
-url='https://accounts.google.com/o/oauth2/v2/auth'+
+var url='https://accounts.google.com/o/oauth2/v2/auth'+
 '?client_id='+encodeURIComponent(cid)+
 '&redirect_uri='+encodeURIComponent(redir)+
 '&response_type=token'+
@@ -334,7 +333,7 @@ try{localStorage.removeItem('gd_token');}catch(e2){}
 }
 showToast(String(e).indexOf('401')>=0
 ?'🔐 Sesi Google habis — hubungkan ulang (tab CLOUD)'
-:'⚠ Upload Drive gagal');
+:' Upload Drive gagal');
 }
 }
 var pending=null;var doneCodes={};
