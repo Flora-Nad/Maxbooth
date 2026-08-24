@@ -325,15 +325,21 @@ background:'#fff',foreground:'#111',level:'M'});
 var cap=$('#shareCapLine');
 if(cap){cap.textContent='☁️ Scan untuk unduh '+
 'foto+video sesi '+code;}
+var st2=$('#gdStatus');
+if(st2){st2.textContent='✅ Upload sesi '+code+' berhasil.';}
 showToast('✅ Link unduhan siap — QR customer aktif!');
 }catch(e){
 console.warn(e);
-if(String(e).indexOf('401')>=0){
+var is401=String(e).indexOf('401')>=0;
+if(is401){
 try{localStorage.removeItem('gd_token');}catch(e2){}
 }
-showToast(String(e).indexOf('401')>=0
-?'🔐 Sesi Google habis — hubungkan ulang (tab CLOUD)'
-:'⚠ Upload Drive gagal');
+var msg=is401?
+'🔐 Sesi Google habis — hubungkan ulang':
+'⚠ Upload gagal: '+e;
+var st=$('#gdStatus');
+if(st){st.textContent=msg;}
+showToast(msg);
 }
 }
 var pending=null;var doneCodes={};
