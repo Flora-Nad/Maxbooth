@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boothin — Kiosk Photo Booth</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%B8%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bricolage-grotesque/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bricolage-grotesque/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bricolage-grotesque/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-mono/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-mono/700.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+<script>
+tailwind.config = { theme: { extend: { fontFamily: {
+  display: ['"Bricolage Grotesque"','sans-serif'],
+  body: ['Inter','sans-serif'],
+  mono: ['"Space Mono"','monospace'],
+}}}}
+</script>
+<link rel="stylesheet" href="style.css?v=3">
+</head>
+<body class="font-body" data-pattern="dots">
+<div id="bgPattern"></div>
+<div id="statusBadge" class="online fixed top-4 right-4 z-40"><span class="dot"></span><span id="statusText">ONLINE</span></div>
+
+<section id="screen-attract" class="screen active items-center justify-center overflow-y-auto">
+  <video id="atVideo" playsinline muted loop autoplay class="absolute inset-0 w-full h-full object-cover hidden"></video>
+  <img id="atImage" class="absolute inset-0 w-full h-full object-cover hidden" alt="">
+  <button id="btnCam" class="btn btn-press hidden absolute left-1/2 -translate-x-1/2 top-[68%] z-10 w-24 h-24 rounded-full border-[3px] border-white bg-black/50 text-white flex flex-col items-center justify-center pulse-big" style="backdrop-filter:blur(4px);box-shadow:0 4px 24px rgba(0,0,0,.45)">
+    <span class="text-3xl">📷</span><span class="font-bold text-[11px] mt-0.5">Mulai Foto</span>
+  </button>
+  <div id="atDefault" class="w-full h-full flex items-center justify-center">
+    <div class="absolute top-6 left-6 flex items-center gap-3">
+      <div id="atLogoBox" class="w-12 h-12 rounded-2xl border-[3px] border-[var(--ink)] bg-[var(--surface)] grid place-items-center text-2xl shadow-[var(--shadow)] overflow-hidden">📸</div>
+      <span id="atBrand" class="font-display font-extrabold text-2xl tracking-tight">Boothin<span style="color:var(--accent)">.</span></span>
+    </div>
+    <a href="/" class="absolute bottom-16 left-5 font-mono text-[10px] opacity-40 hover:opacity-80 z-20">← keluar booth</a>
+    <div class="floaty hidden md:block absolute left-[7%] top-[20%] w-36 card rounded-xl p-2" style="--r:-7deg">
+      <div class="space-y-1.5"><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 55%,var(--surface))">🤪</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 30%,var(--surface))">✌️</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 35%,var(--surface))">🥳</div></div>
+    </div>
+    <div class="floaty hidden md:block absolute right-[8%] top-[30%] w-36 card rounded-xl p-2" style="--r:6deg;animation-delay:.9s">
+      <div class="space-y-1.5"><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 26%,var(--surface))">😎</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 50%,var(--surface))">🎉</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 40%,var(--surface))">😜</div></div>
+    </div>
+    <div class="relative z-10 text-center px-5 sm:px-6 max-w-2xl m-auto py-24">
+      <p class="font-mono text-xs sm:text-sm tracking-[.25em] opacity-70 mb-4">SELF-SERVICE PHOTO BOOTH</p>
+      <h1 class="font-display font-extrabold text-4xl sm:text-7xl leading-none tracking-tight">Foto seru,<br>langsung <span style="color:var(--accent)">cetak!</span></h1>
+      <p class="mt-5 text-base sm:text-lg opacity-75">Pilih frame & filter • foto • cetak • bagikan</p>
+      <div class="mt-8 inline-flex flex-wrap items-center justify-center gap-4 card rounded-2xl px-6 sm:px-7 py-4">
+        <div class="text-left"><p class="font-mono text-[11px] opacity-60">HARGA / SESI</p><p id="atPrice" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">Rp 15.000</p></div>
+        <div class="w-px h-12 hidden sm:block" style="background:var(--soft)"></div>
+        <div class="text-left"><p class="font-mono text-[11px] opacity-60">PER SESI</p><p id="atPoses" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">3 pose</p></div>
+        <div class="w-px h-12 hidden sm:block" style="background:var(--soft)"></div>
+        <div class="text-left"><p class="font-mono text-[11px] opacity-60">BAYAR</p><p id="atPayMode" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">DI TEMPAT</p></div>
+      </div>
+      <div class="mt-8 sm:mt-9">
+        <button id="btnStart" class="btn btn-press pulse-big font-display font-extrabold text-xl sm:text-2xl px-8 sm:px-12 py-5 sm:py-6 rounded-3xl border-[3px] border-[var(--ink)] shadow-[var(--shadow)] w-full sm:w-auto" style="background:var(--accent);color:var(--surface)">📷 Mulai Foto</button>
+      </div>
+    </div>
+    <div class="absolute bottom-0 inset-x-0 overflow-hidden py-3 border-t-[3px]" style="border-color:var(--ink);background:var(--ink);color:var(--bg)">
+      <div class="marquee font-mono text-sm font-bold">
+        <span>🖼 6 FRAME</span><span>🎨 8 FILTER</span><span>🖨 CETAK 80MM</span><span>📲 SHARE DIGITAL</span><span>🪞 MIRROR OPSIONAL</span><span>🎬 VIDEO STRIP</span>
+        <span>🖼 6 FRAME</span><span>🎨 8 FILTER</span><span>🖨 CETAK 80MM</span><span>📲 SHARE DIGITAL</span><span>🪞 MIRROR OPSIONAL</span><span>🎬 VIDEO STRIP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screen-setup" class="screen items-center justify-center p-4 sm:p-6 overflow-y-auto">
+  <div class="w-full max-w-5xl grid md:grid-cols-[1.1fr,1fr] gap-6 items-stretch m-auto my-4">
+    <div class="card rounded-[2rem] p-5 flex flex-col">
+      <div class="flex items-center justify-between mb-3">
+        <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 1/3 — PREVIEW KAMERA</p>
+        <span id="camBadge" class="font-mono text-[10px] px-2 py-1 rounded-full border-2 border-[var(--ink)]" style="background:var(--accent2)">📷 LIVE</span>
+      </div>
+      <div class="relative flex-1 min-h-[240px] rounded-2xl overflow-hidden border-[3px] border-[var(--ink)] bg-black">
+        <video id="setupVideo" playsinline muted autoplay class="absolute inset-0 w-full h-full object-cover mirror hidden"></video>
+        <img id="setupSim" class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview simulasi">
+        <div id="setupNoCam" class="absolute inset-0 grid place-items-center text-white/80 text-center p-6 hidden">
+          <div><p class="text-4xl">📷</p><p class="font-semibold mt-2">Kamera tidak terdeteksi</p><p class="text-sm opacity-70 mt-1">Mode simulasi aktif — hasil tetap bisa dicetak.</p></div>
+        </div>
+      </div>
+      <p class="font-mono text-[11px] opacity-55 mt-3 text-center">Atur gaya kamu, lalu tekan Mulai Foto 😉</p>
+    </div>
+    <div class="card rounded-[2rem] p-6 flex flex-col md:max-h-[calc(100vh-2rem)] md:overflow-y-auto op-scroll">
+      <p class="font-mono text-xs tracking-[.2em] opacity-60">🖼 PILIH FRAME</p>
+      <div id="frameGrid" class="grid grid-cols-3 gap-2.5 mt-3"></div>
+      <p class="font-mono text-xs tracking-[.2em] opacity-60 mt-5">🎨 PILIH FILTER</p>
+      <div id="filterGrid" class="grid grid-cols-2 gap-2.5 mt-3"></div>
+      <p class="font-mono text-xs tracking-[.2em] opacity-60 mt-5">🪞 MIRROR</p>
+      <div class="grid grid-cols-2 gap-2.5 mt-3">
+        <button id="mirrorOn" class="seg-btn on">🪞 Mirror ON</button>
+        <button id="mirrorOff" class="seg-btn">📷 Normal</button>
+      </div>
+      <p class="font-mono text-xs tracking-[.2em] opacity-60 mt-5">🎬 HASIL</p>
+      <div class="grid grid-cols-2 gap-2.5 mt-3">
+        <button id="modePhoto" class="seg-btn on">📷 Foto saja</button>
+        <button id="modeGif" class="seg-btn">🎬 Foto + Video</button>
+      </div>
+      <div class="mt-auto pt-5 space-y-3">
+        <button id="btnBeginCapture" class="btn btn-press w-full font-display font-extrabold text-xl py-5 rounded-2xl border-[3px] border-[var(--ink)] shadow-[var(--shadow)]" style="background:var(--accent);color:var(--surface)">📸 Mulai Foto</button>
+        <button id="btnBackPay" class="btn w-full py-2.5 font-semibold text-sm opacity-70 hover:opacity-100">← Kembali</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screen-capture" class="screen">
+  <div class="absolute inset-0 bg-black">
+    <video id="captureVideo" playsinline muted autoplay class="absolute inset-0 w-full h-full object-cover mirror"></video>
+    <div id="captureSim" class="absolute inset-0 grid place-items-center text-white hidden"><p class="text-6xl">🎭</p></div>
+    <div id="cdWrap" class="hidden absolute inset-0 grid place-items-center pointer-events-none">
+      <span id="cdNum" class="font-display font-extrabold text-[26vmin] leading-none text-white drop-shadow-[0_8px_0_rgba(0,0,0,.45)]">3</span>
+    </div>
+    <div id="flash" class="absolute inset-0 bg-white opacity-0 pointer-events-none"></div>
+    <div class="absolute top-4 left-4 flex items-center gap-2 bg-black/55 text-white font-mono text-xs px-3 py-1.5 rounded-full"><span class="w-2 h-2 rounded-full blink" style="background:#FF4B2B"></span> REC</div>
+    <div id="poseTag" class="absolute top-4 right-4 bg-black/55 text-white font-mono text-xs px-3 py-1.5 rounded-full">Pose 1/3</div>
+    <p id="captureHint" class="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/55 text-white font-display font-bold text-base px-4 py-1.5 rounded-full">Bersiap… 👀</p>
+    <div id="shotsStrip" class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2"></div>
+  </div>
+</section>
