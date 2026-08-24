@@ -333,7 +333,7 @@ try{localStorage.removeItem('gd_token');}catch(e2){}
 }
 showToast(String(e).indexOf('401')>=0
 ?'🔐 Sesi Google habis — hubungkan ulang (tab CLOUD)'
-:' Upload Drive gagal');
+:'⚠ Upload Drive gagal');
 }
 }
 var pending=null;var doneCodes={};
