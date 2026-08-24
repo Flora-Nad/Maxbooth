@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boothin — Kiosk Photo Booth + Pembayaran</title>
+<title>Boothin — Kiosk Photo Booth</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%B8%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bricolage-grotesque/600.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bricolage-grotesque/700.css">
@@ -23,92 +23,59 @@ tailwind.config = { theme: { extend: { fontFamily: {
   mono: ['"Space Mono"','monospace'],
 }}}}
 </script>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body class="font-body" data-pattern="dots">
 <div id="bgPattern"></div>
 <div id="statusBadge" class="online fixed top-4 right-4 z-40"><span class="dot"></span><span id="statusText">ONLINE</span></div>
 
 <section id="screen-attract" class="screen active items-center justify-center overflow-y-auto">
-  <div class="absolute top-6 left-6 flex items-center gap-3">
-    <div id="atLogoBox" class="w-12 h-12 rounded-2xl border-[3px] border-[var(--ink)] bg-[var(--surface)] grid place-items-center text-2xl shadow-[var(--shadow)] overflow-hidden">📸</div>
-    <span id="atBrand" class="font-display font-extrabold text-2xl tracking-tight">Boothin<span style="color:var(--accent)">.</span></span>
-  </div>
-  <a href="/" class="absolute bottom-16 left-5 font-mono text-[10px] opacity-40 hover:opacity-80 z-20">← keluar booth</a>
-  <div class="floaty hidden md:block absolute left-[7%] top-[20%] w-36 card rounded-xl p-2" style="--r:-7deg">
-    <div class="space-y-1.5"><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 55%,var(--surface))">🤪</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 30%,var(--surface))">✌️</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 35%,var(--surface))">🥳</div></div>
-  </div>
-  <div class="floaty hidden md:block absolute right-[8%] top-[30%] w-36 card rounded-xl p-2" style="--r:6deg;animation-delay:.9s">
-    <div class="space-y-1.5"><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 26%,var(--surface))">😎</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 50%,var(--surface))">🎉</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 40%,var(--surface))">😜</div></div>
-  </div>
-  <div class="relative z-10 text-center px-5 sm:px-6 max-w-2xl m-auto py-24">
-    <p class="font-mono text-xs sm:text-sm tracking-[.25em] opacity-70 mb-4">SELF-SERVICE PHOTO BOOTH</p>
-    <h1 class="font-display font-extrabold text-4xl sm:text-7xl leading-none tracking-tight">Foto seru,<br>langsung <span style="color:var(--accent)">cetak!</span></h1>
-    <p class="mt-5 text-base sm:text-lg opacity-75">Bayar pakai QRIS • pilih frame & filter • strip langsung jadi</p>
-    <div class="mt-8 inline-flex flex-wrap items-center justify-center gap-4 card rounded-2xl px-6 sm:px-7 py-4">
-      <div class="text-left"><p class="font-mono text-[11px] opacity-60">HARGA / SESI</p><p id="atPrice" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">Rp 15.000</p></div>
-      <div class="w-px h-12 hidden sm:block" style="background:var(--soft)"></div>
-      <div class="text-left"><p class="font-mono text-[11px] opacity-60">PER SESI</p><p id="atPoses" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">3 pose</p></div>
-      <div class="w-px h-12 hidden sm:block" style="background:var(--soft)"></div>
-      <div class="text-left"><p class="font-mono text-[11px] opacity-60">PEMBAYARAN</p><p id="atPayMode" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">QRIS</p></div>
+  <video id="atVideo" playsinline muted loop autoplay class="absolute inset-0 w-full h-full object-cover hidden"></video>
+  <img id="atImage" class="absolute inset-0 w-full h-full object-cover hidden" alt="">
+  <button id="btnCam" class="btn btn-press hidden absolute left-1/2 -translate-x-1/2 top-[68%] z-10 w-24 h-24 rounded-full border-[3px] border-white bg-black/50 text-white flex flex-col items-center justify-center pulse-big" style="backdrop-filter:blur(4px);box-shadow:0 4px 24px rgba(0,0,0,.45)">
+    <span class="text-3xl">📷</span><span class="font-bold text-[11px] mt-0.5">Mulai Foto</span>
+  </button>
+  <div id="atDefault" class="w-full h-full flex items-center justify-center">
+    <div class="absolute top-6 left-6 flex items-center gap-3">
+      <div id="atLogoBox" class="w-12 h-12 rounded-2xl border-[3px] border-[var(--ink)] bg-[var(--surface)] grid place-items-center text-2xl shadow-[var(--shadow)] overflow-hidden">📸</div>
+      <span id="atBrand" class="font-display font-extrabold text-2xl tracking-tight">Boothin<span style="color:var(--accent)">.</span></span>
     </div>
-    <div class="mt-8 sm:mt-9">
-      <button id="btnStart" class="btn btn-press pulse-big font-display font-extrabold text-xl sm:text-2xl px-8 sm:px-12 py-5 sm:py-6 rounded-3xl border-[3px] border-[var(--ink)] shadow-[var(--shadow)] w-full sm:w-auto" style="background:var(--accent);color:var(--surface)">💳 Scan QRIS untuk Mulai</button>
+    <a href="/" class="absolute bottom-16 left-5 font-mono text-[10px] opacity-40 hover:opacity-80 z-20">← keluar booth</a>
+    <div class="floaty hidden md:block absolute left-[7%] top-[20%] w-36 card rounded-xl p-2" style="--r:-7deg">
+      <div class="space-y-1.5"><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 55%,var(--surface))">🤪</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 30%,var(--surface))">✌️</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 35%,var(--surface))">🥳</div></div>
     </div>
-  </div>
-  <div class="absolute bottom-0 inset-x-0 overflow-hidden py-3 border-t-[3px]" style="border-color:var(--ink);background:var(--ink);color:var(--bg)">
-    <div class="marquee font-mono text-sm font-bold">
-      <span>⚡ BAYAR QRIS</span><span>🖼 6 FRAME</span><span>🎨 8 FILTER</span><span>🖨 CETAK 80MM</span><span>📲 SHARE DIGITAL</span><span>🔄 RETAKE GRATIS</span><span>🪞 MIRROR OPSIONAL</span>
-      <span>⚡ BAYAR QRIS</span><span>🖼 6 FRAME</span><span>🎨 8 FILTER</span><span>🖨 CETAK 80MM</span><span>📲 SHARE DIGITAL</span><span>🔄 RETAKE GRATIS</span><span>🪞 MIRROR OPSIONAL</span>
+    <div class="floaty hidden md:block absolute right-[8%] top-[30%] w-36 card rounded-xl p-2" style="--r:6deg;animation-delay:.9s">
+      <div class="space-y-1.5"><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 26%,var(--surface))">😎</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent2) 50%,var(--surface))">🎉</div><div class="aspect-[4/3] rounded-md grid place-items-center text-2xl" style="background:color-mix(in srgb,var(--accent) 40%,var(--surface))">😜</div></div>
+    </div>
+    <div class="relative z-10 text-center px-5 sm:px-6 max-w-2xl m-auto py-24">
+      <p class="font-mono text-xs sm:text-sm tracking-[.25em] opacity-70 mb-4">SELF-SERVICE PHOTO BOOTH</p>
+      <h1 class="font-display font-extrabold text-4xl sm:text-7xl leading-none tracking-tight">Foto seru,<br>langsung <span style="color:var(--accent)">cetak!</span></h1>
+      <p class="mt-5 text-base sm:text-lg opacity-75">Pilih frame & filter • foto • cetak • bagikan</p>
+      <div class="mt-8 inline-flex flex-wrap items-center justify-center gap-4 card rounded-2xl px-6 sm:px-7 py-4">
+        <div class="text-left"><p class="font-mono text-[11px] opacity-60">HARGA / SESI</p><p id="atPrice" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">Rp 15.000</p></div>
+        <div class="w-px h-12 hidden sm:block" style="background:var(--soft)"></div>
+        <div class="text-left"><p class="font-mono text-[11px] opacity-60">PER SESI</p><p id="atPoses" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">3 pose</p></div>
+        <div class="w-px h-12 hidden sm:block" style="background:var(--soft)"></div>
+        <div class="text-left"><p class="font-mono text-[11px] opacity-60">BAYAR</p><p id="atPayMode" class="font-display font-extrabold text-2xl sm:text-3xl leading-none mt-1">DI TEMPAT</p></div>
+      </div>
+      <div class="mt-8 sm:mt-9">
+        <button id="btnStart" class="btn btn-press pulse-big font-display font-extrabold text-xl sm:text-2xl px-8 sm:px-12 py-5 sm:py-6 rounded-3xl border-[3px] border-[var(--ink)] shadow-[var(--shadow)] w-full sm:w-auto" style="background:var(--accent);color:var(--surface)">📷 Mulai Foto</button>
+      </div>
+    </div>
+    <div class="absolute bottom-0 inset-x-0 overflow-hidden py-3 border-t-[3px]" style="border-color:var(--ink);background:var(--ink);color:var(--bg)">
+      <div class="marquee font-mono text-sm font-bold">
+        <span>🖼 6 FRAME</span><span>🎨 8 FILTER</span><span>🖨 CETAK 80MM</span><span>📲 SHARE DIGITAL</span><span>🪞 MIRROR OPSIONAL</span><span>🎬 VIDEO STRIP</span>
+        <span>🖼 6 FRAME</span><span>🎨 8 FILTER</span><span>🖨 CETAK 80MM</span><span>📲 SHARE DIGITAL</span><span>🪞 MIRROR OPSIONAL</span><span>🎬 VIDEO STRIP</span>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="screen-payment" class="screen items-center justify-center p-4 sm:p-6 overflow-y-auto">
-  <div class="card rounded-[2rem] p-6 sm:p-10 w-full max-w-md text-center relative m-auto my-6">
-    <span id="paySimBadge" class="sim-badge absolute top-4 right-4">MODE LITE</span>
-    <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 1/4 — PEMBAYARAN</p>
-    <h2 class="font-display font-extrabold text-3xl mt-2">Bayar QRIS</h2>
-    <p id="payModeTag" class="font-mono text-[11px] mt-1 opacity-60">🖼 QRIS STATIS</p>
-    <p id="payPrice" class="font-display font-extrabold text-4xl mt-3" style="color:var(--accent)">Rp 15.000</p>
-    <div id="payDynamicWrap" class="mt-6 relative mx-auto w-fit hidden">
-      <div class="bg-white border-[3px] border-[var(--ink)] rounded-2xl p-5 relative shadow-[var(--shadow)]">
-        <canvas id="qrCanvas"></canvas>
-        <div class="scanline absolute left-4 right-4 h-1 rounded-full" style="background:var(--accent)"></div>
-        <div id="payDone" class="hidden absolute inset-0 bg-white/95 rounded-xl grid place-items-center">
-          <div class="success-pop text-center">
-            <div class="w-20 h-20 mx-auto rounded-full grid place-items-center text-4xl border-[3px] border-[var(--ink)]" style="background:#22C55E;color:#fff">✓</div>
-            <p class="font-display font-extrabold text-xl mt-3" style="color:#15803D">Pembayaran Berhasil!</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="payStaticWrap" class="mt-6 relative mx-auto w-fit hidden">
-      <div class="bg-white border-[3px] border-[var(--ink)] rounded-2xl p-4 relative shadow-[var(--shadow)]">
-        <img id="payStaticImg" class="hidden w-[220px] h-[220px] object-contain rounded-lg" alt="QRIS">
-        <div id="payStaticPlaceholder" class="w-[220px] h-[220px] grid place-items-center text-neutral-400 text-center font-mono text-xs px-4">Gambar QRIS belum diupload.<br>Atur di Panel Operator ⚙️</div>
-        <div class="scanline absolute left-4 right-4 h-1 rounded-full" style="background:var(--accent)"></div>
-        <div id="payDoneStatic" class="hidden absolute inset-0 bg-white/95 rounded-xl grid place-items-center">
-          <div class="success-pop text-center">
-            <div class="w-20 h-20 mx-auto rounded-full grid place-items-center text-4xl border-[3px] border-[var(--ink)]" style="background:#22C55E;color:#fff">✓</div>
-            <p class="font-display font-extrabold text-xl mt-3" style="color:#15803D">Pembayaran Berhasil!</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p id="payStatus" class="mt-5 font-semibold flex items-center justify-center gap-2">
-      <span class="w-2.5 h-2.5 rounded-full blink" style="background:var(--accent2)"></span> Menunggu pembayaran…
-    </p>
-    <p class="font-mono text-[11px] opacity-50 mt-1">Mandiri · BCA · GoPay · OVO · Dana · ShopeePay</p>
-    <button id="payConfirmBtn" class="hidden btn btn-press mt-5 w-full py-4 rounded-2xl border-[3px] border-[var(--ink)] font-display font-extrabold text-lg shadow-[var(--shadow)]" style="background:#22C55E;color:#fff">✅ Saya Sudah Bayar — Lanjut</button>
-    <button id="btnCancelPay" class="btn btn-press mt-4 px-6 py-3 border-[3px] border-[var(--ink)] rounded-xl font-bold bg-[var(--surface)] shadow-[4px_4px_0_var(--ink)]">Batalkan</button>
-  </div>
-</section>
-  <section id="screen-setup" class="screen items-center justify-center p-4 sm:p-6 overflow-y-auto">
+<section id="screen-setup" class="screen items-center justify-center p-4 sm:p-6 overflow-y-auto">
   <div class="w-full max-w-5xl grid md:grid-cols-[1.1fr,1fr] gap-6 items-stretch m-auto my-4">
     <div class="card rounded-[2rem] p-5 flex flex-col">
       <div class="flex items-center justify-between mb-3">
-        <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 2/4 — PREVIEW KAMERA</p>
+        <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 1/3 — PREVIEW KAMERA</p>
         <span id="camBadge" class="font-mono text-[10px] px-2 py-1 rounded-full border-2 border-[var(--ink)]" style="background:var(--accent2)">📷 LIVE</span>
       </div>
       <div class="relative flex-1 min-h-[240px] rounded-2xl overflow-hidden border-[3px] border-[var(--ink)] bg-black">
@@ -130,6 +97,11 @@ tailwind.config = { theme: { extend: { fontFamily: {
         <button id="mirrorOn" class="seg-btn on">🪞 Mirror ON</button>
         <button id="mirrorOff" class="seg-btn">📷 Normal</button>
       </div>
+      <p class="font-mono text-xs tracking-[.2em] opacity-60 mt-5">🎬 HASIL</p>
+      <div class="grid grid-cols-2 gap-2.5 mt-3">
+        <button id="modePhoto" class="seg-btn on">📷 Foto saja</button>
+        <button id="modeGif" class="seg-btn">🎬 Foto + Video</button>
+      </div>
       <div class="mt-auto pt-5 space-y-3">
         <button id="btnBeginCapture" class="btn btn-press w-full font-display font-extrabold text-xl py-5 rounded-2xl border-[3px] border-[var(--ink)] shadow-[var(--shadow)]" style="background:var(--accent);color:var(--surface)">📸 Mulai Foto</button>
         <button id="btnBackPay" class="btn w-full py-2.5 font-semibold text-sm opacity-70 hover:opacity-100">← Kembali</button>
@@ -138,54 +110,49 @@ tailwind.config = { theme: { extend: { fontFamily: {
   </div>
 </section>
 
-<section id="screen-capture" class="screen items-center justify-center p-4 overflow-y-auto">
-  <div class="relative w-full max-w-3xl m-auto my-4">
-    <div class="relative card rounded-[2rem] overflow-hidden">
-      <div class="relative aspect-[4/3] bg-black">
-        <video id="captureVideo" playsinline muted autoplay class="absolute inset-0 w-full h-full object-cover mirror"></video>
-        <div id="captureSim" class="absolute inset-0 grid place-items-center text-white hidden"><p class="text-6xl">🎭</p></div>
-        <div id="cdWrap" class="hidden absolute inset-0 grid place-items-center pointer-events-none">
-          <span id="cdNum" class="font-display font-extrabold text-[26vmin] leading-none text-white drop-shadow-[0_8px_0_rgba(0,0,0,.45)]">3</span>
-        </div>
-        <div id="flash" class="absolute inset-0 bg-white opacity-0 pointer-events-none"></div>
-        <div class="absolute top-4 left-4 flex items-center gap-2 bg-black/55 text-white font-mono text-xs px-3 py-1.5 rounded-full"><span class="w-2 h-2 rounded-full blink" style="background:#FF4B2B"></span> REC</div>
-        <div id="poseTag" class="absolute top-4 right-4 bg-black/55 text-white font-mono text-xs px-3 py-1.5 rounded-full">Pose 1/3</div>
-        <div id="dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2"></div>
-      </div>
-      <div class="px-5 py-4 flex items-center justify-between gap-3" style="background:var(--surface)">
-        <p id="captureHint" class="font-display font-bold text-base sm:text-lg">Bersiap… 👀</p>
-        <p class="font-mono text-[10px] sm:text-xs opacity-50 text-right">Retake gratis sebelum cetak</p>
-      </div>
+<section id="screen-capture" class="screen">
+  <div class="absolute inset-0 bg-black">
+    <video id="captureVideo" playsinline muted autoplay class="absolute inset-0 w-full h-full object-cover mirror"></video>
+    <div id="captureSim" class="absolute inset-0 grid place-items-center text-white hidden"><p class="text-6xl">🎭</p></div>
+    <div id="cdWrap" class="hidden absolute inset-0 grid place-items-center pointer-events-none">
+      <span id="cdNum" class="font-display font-extrabold text-[26vmin] leading-none text-white drop-shadow-[0_8px_0_rgba(0,0,0,.45)]">3</span>
     </div>
+    <div id="flash" class="absolute inset-0 bg-white opacity-0 pointer-events-none"></div>
+    <div class="absolute top-4 left-4 flex items-center gap-2 bg-black/55 text-white font-mono text-xs px-3 py-1.5 rounded-full"><span class="w-2 h-2 rounded-full blink" style="background:#FF4B2B"></span> REC</div>
+    <div id="poseTag" class="absolute top-4 right-4 bg-black/55 text-white font-mono text-xs px-3 py-1.5 rounded-full">Pose 1/3</div>
+    <p id="captureHint" class="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/55 text-white font-display font-bold text-base px-4 py-1.5 rounded-full">Bersiap… 👀</p>
+    <div id="shotsStrip" class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2"></div>
   </div>
-</section>
-
-<section id="screen-preview" class="screen items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    </section>
+    <section id="screen-preview" class="screen items-center justify-center p-4 sm:p-6 overflow-y-auto">
   <div class="w-full max-w-4xl grid md:grid-cols-[auto,1fr] gap-7 items-center m-auto my-4">
     <div class="mx-auto">
       <div class="card rounded-2xl p-3 max-w-[260px]">
         <img id="previewStrip" alt="Strip foto" class="w-full rounded-lg border-2 border-[var(--ink)]/20">
         <p id="frameCaption" class="font-mono text-[10px] text-center mt-2 opacity-70">Frame Klasik • Filter Normal</p>
+        <img id="gifStrip" alt="GIF" class="hidden w-full rounded-lg border-2 border-[var(--ink)]/20 mt-2">
+        <p id="gifCap" class="hidden font-mono text-[10px] text-center mt-1 opacity-70">🎬 Video strip siap!</p>
         <p class="font-mono text-[10px] text-center mt-1 opacity-50">FORMAT CETAK • EP-80ECO • 80MM</p>
       </div>
     </div>
     <div class="card rounded-[2rem] p-6 sm:p-8 text-center md:text-left">
-      <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 3/4 — HASIL</p>
+      <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 2/3 — HASIL</p>
       <h2 class="font-display font-extrabold text-2xl sm:text-3xl mt-2">Gimana hasilnya? 😍</h2>
-      <p class="mt-2 opacity-70 font-medium">Kurang pas? <b>Retake gratis</b> selama belum dicetak.</p>
+      <p class="mt-2 opacity-70 font-medium">Kurang pas? Foto ulang selama belum dicetak.</p>
       <div class="mt-6 sm:mt-7 space-y-3.5">
         <button id="btnPrint" class="btn btn-press w-full font-display font-extrabold text-lg sm:text-xl py-4 sm:py-5 rounded-2xl border-[3px] border-[var(--ink)] shadow-[var(--shadow)]" style="background:var(--accent);color:var(--surface)">🖨️ Cetak Sekarang</button>
-        <button id="btnRetake" class="btn btn-press w-full font-bold text-base sm:text-lg py-4 rounded-2xl border-[3px] border-[var(--ink)] shadow-[4px_4px_0_var(--ink)] bg-[var(--surface)]">🔄 Foto Ulang — Gratis</button>
+        <button id="btnRetake" class="btn btn-press w-full font-bold text-base sm:text-lg py-4 rounded-2xl border-[3px] border-[var(--ink)] shadow-[4px_4px_0_var(--ink)] bg-[var(--surface)]">🔄 Foto Ulang</button>
         <button id="btnChangeStyle" class="btn w-full py-2.5 font-semibold text-sm opacity-70 hover:opacity-100">🎨 Ganti frame & filter</button>
       </div>
       <p class="font-mono text-[11px] opacity-50 mt-4">Setelah dicetak, sesi dianggap selesai ya!</p>
     </div>
   </div>
-  </section>
-  <section id="screen-print" class="screen items-center justify-center p-4 sm:p-6 overflow-y-auto">
+</section>
+
+<section id="screen-print" class="screen items-center justify-center p-4 sm:p-6 overflow-y-auto">
   <div class="card rounded-[2rem] p-6 sm:p-10 text-center w-full max-w-md relative m-auto my-6">
     <span class="sim-badge absolute top-4 right-4">SIMULASI CETAK</span>
-    <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 4/4 — MENCETAK</p>
+    <p class="font-mono text-xs tracking-[.2em] opacity-60">LANGKAH 3/3 — MENCETAK</p>
     <h2 id="printTitle" class="font-display font-extrabold text-3xl mt-2">Mencetak strip kamu…</h2>
     <div class="mt-7 mx-auto w-56">
       <div class="relative rounded-2xl border-[3px] border-[var(--ink)] p-3 pb-1" style="background:var(--ink);color:var(--bg)">
@@ -209,7 +176,7 @@ tailwind.config = { theme: { extend: { fontFamily: {
     <p class="opacity-70 mt-1 font-medium">Scan untuk simpan versi digitalnya.</p>
     <div class="mt-6 bg-white border-[3px] border-[var(--ink)] rounded-2xl p-5 w-fit mx-auto shadow-[var(--shadow)]">
       <canvas id="shareQr"></canvas>
-      <p class="font-mono text-[10px] mt-2 text-neutral-500">boothin.id/g/<span id="galleryCode">XXXX</span></p>
+      <p class="font-mono text-[10px] mt-2 text-neutral-500">Kode sesi: <span id="galleryCode">XXXX</span></p>
     </div>
     <div class="grid grid-cols-2 gap-3 mt-6">
       <button class="shareOpt btn btn-press py-3.5 rounded-xl border-[3px] border-[var(--ink)] font-bold bg-[var(--surface)] shadow-[4px_4px_0_var(--ink)]" data-k="wa">💬 WhatsApp</button>
@@ -227,14 +194,10 @@ tailwind.config = { theme: { extend: { fontFamily: {
     <button id="opClose" class="btn w-10 h-10 rounded-xl border-[3px] border-[var(--ink)] grid place-items-center font-bold bg-[var(--surface)]">✕</button>
   </div>
   <p class="font-mono text-[11px] opacity-55 mt-1">Pengaturan booth — langsung diterapkan. 🔒 Produksi: dikunci PIN.</p>
-
   <div class="op-tabs mt-5">
     <button class="op-tab on" data-pane="paneUmum">UMUM</button>
-    <button class="op-tab" data-pane="paneBayar">BAYAR</button>
     <button class="op-tab" data-pane="paneFrame">FRAME</button>
   </div>
-
-  <!-- ═══ TAB UMUM ═══ -->
   <div id="paneUmum" class="op-pane on">
     <div class="mt-5">
       <p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-3">TEMA TAMPILAN</p>
@@ -257,60 +220,13 @@ tailwind.config = { theme: { extend: { fontFamily: {
       <div><p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-2">MIRROR DEFAULT</p><select id="opMirror" class="op-input"><option value="1" selected>🪞 ON (gaya selfie)</option><option value="0">📷 OFF (normal)</option></select></div>
     </div>
   </div>
-
-  <!-- ═══ TAB BAYAR ═══ -->
-  <div id="paneBayar" class="op-pane">
-    <div class="mt-5">
-      <p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-3">💳 MODE PEMBAYARAN QRIS</p>
-      <div class="grid grid-cols-2 gap-2">
-        <button id="pmStatic" class="paymode-btn on">🖼 Statis<br><span class="font-mono text-[9px] opacity-70">LITE / PEMULA</span></button>
-        <button id="pmMidtrans" class="paymode-btn">⚡ Midtrans<br><span class="font-mono text-[9px] opacity-70">PRO / DINAMIS</span></button>
-      </div>
-    </div>
-    <div id="optsStatic" class="mt-4 space-y-3">
-      <div>
-        <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">UPLOAD GAMBAR QRIS KAMU</p>
-        <input id="opQrisFile" type="file" accept="image/*" class="op-input !p-2 text-xs">
-        <div class="mt-2 bg-white border-2 border-[var(--ink)] rounded-xl p-2 w-fit mx-auto">
-          <img id="opQrisPreview" class="hidden w-28 h-28 object-contain" alt="QRIS">
-          <div id="opQrisEmpty" class="w-28 h-28 grid place-items-center text-neutral-400 text-[10px] text-center font-mono">belum ada<br>QRIS</div>
-        </div>
-      </div>
-      <div>
-        <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">CARA VERIFIKASI PEMBAYARAN</p>
-        <div class="grid grid-cols-2 gap-2">
-          <button id="verifTimer" class="seg-btn on">⏱ Timer Otomatis</button>
-          <button id="verifManual" class="seg-btn">✅ Tombol Manual</button>
-        </div>
-      </div>
-      <div id="timerOpts">
-        <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">DURASI TIMER (DETIK)</p>
-        <input id="opTimerSec" type="number" min="5" max="120" value="15" class="op-input">
-      </div>
-    </div>
-    <div id="optsMidtrans" class="mt-4 space-y-3 hidden">
-      <div><p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">MERCHANT ID</p><input id="opMerchantId" class="op-input font-mono text-xs" placeholder="G123456789"></div>
-      <div><p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">CLIENT KEY</p><input id="opClientId" class="op-input font-mono text-xs" placeholder="SB-Mid-xxxxx"></div>
-      <div><p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">SERVER KEY 🔒</p><input id="opServerKey" type="password" class="op-input font-mono text-xs" placeholder="••••••••"></div>
-      <div>
-        <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mb-1.5">ENVIRONMENT</p>
-        <div class="grid grid-cols-2 gap-2">
-          <button id="envSandbox" class="seg-btn on">🧪 Sandbox</button>
-          <button id="envProd" class="seg-btn">🚀 Production</button>
-        </div>
-      </div>
-      <button id="opTestMt" class="btn btn-press w-full py-2.5 rounded-xl border-[3px] border-[var(--ink)] font-bold text-sm bg-[var(--accent2)] shadow-[3px_3px_0_var(--ink)]">🔌 Tes Koneksi</button>
-      <p class="font-mono text-[9px] opacity-50 leading-relaxed">ℹ Server Key dipakai backend untuk membuat QRIS dinamis & menerima webhook. Uang cair langsung ke rekening merchant kamu (bukan ke Boothin).</p>
-    </div>
-  </div>
-  <!-- ═══ TAB FRAME (Frame Studio) ═══ -->
   <div id="paneFrame" class="op-pane">
     <div class="mt-5">
       <p class="font-mono text-xs font-bold tracking-widest opacity-60 mb-3">🖼 FRAME STUDIO</p>
       <div id="fsDrop" class="fs-drop">
         <p class="text-2xl">📤</p>
         <p class="font-bold text-sm mt-1">Klik / seret file frame ke sini</p>
-        <p class="font-mono text-[10px] opacity-60 mt-1">PNG transparan (overlay) • JPG (latar)</p>
+        <p class="font-mono text-[10px] opacity-60 mt-1">PNG transparan (overlay di atas foto)</p>
       </div>
       <input id="fsFile" type="file" accept="image/*" class="hidden">
       <div class="grid grid-cols-2 gap-2 mt-3">
@@ -319,17 +235,19 @@ tailwind.config = { theme: { extend: { fontFamily: {
       </div>
       <p class="font-mono text-[10px] font-bold tracking-widest opacity-50 mt-4 mb-2">FRAME TERSIMPAN (<span id="fsCount">0</span>)</p>
       <div id="fsList" class="space-y-2"></div>
-      <p class="font-mono text-[9px] opacity-50 leading-relaxed mt-3">💾 Frame tersimpan OFFLINE di perangkat (IndexedDB) — tetap bisa dipakai saat koneksi putus. Sinkron online (Google Drive) menyusul.</p>
+      <p class="font-mono text-[9px] opacity-50 leading-relaxed mt-3">💾 Frame tersimpan OFFLINE di perangkat (IndexedDB) — tetap bisa dipakai saat koneksi putus.</p>
     </div>
   </div>
-
   <button id="opSave" class="btn btn-press mt-7 w-full py-4 rounded-2xl border-[3px] border-[var(--ink)] font-display font-extrabold text-lg shadow-[var(--shadow)]" style="background:var(--accent);color:var(--surface)">💾 Simpan & Terapkan</button>
   <p class="font-mono text-[10px] opacity-45 mt-3 text-center">Tersimpan otomatis di perangkat ini (localStorage).</p>
 </aside>
 
 <div id="toast" class="fixed bottom-6 left-1/2 z-50 px-6 py-3.5 rounded-full border-[3px] border-[var(--ink)] font-semibold text-sm max-w-[92vw] text-center shadow-[var(--shadow)]" style="background:var(--ink);color:var(--bg)"></div>
 
-<script src="data.js"></script>
-<script src="app.js"></script>
+<script src="data.js?v=3"></script>
+<script src="app.js?v=8"></script>
+<script src="video.js?v=4"></script>
+<script src="media.js?v=2"></script>
+<script src="drive.js?v=5"></script>
 </body>
 </html>
