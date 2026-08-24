@@ -22,8 +22,6 @@ body[data-pattern="petals"] #bgPattern{background-image:radial-gradient(color-mi
 .paymode-btn.on{background:var(--accent);color:var(--surface)}
 .seg-btn{border:2px solid var(--ink);border-radius:.6rem;padding:.45rem .4rem;font-weight:700;font-size:.7rem;background:var(--surface);transition:all .18s;width:100%}
 .seg-btn.on{background:var(--ink);color:var(--surface)}
-
-/* ═══ Frame Studio ═══ */
 .fs-drop{border:3px dashed var(--ink);border-radius:1rem;padding:1rem;text-align:center;cursor:pointer;transition:all .2s}
 .fs-drop:hover,.fs-drop.drag{background:color-mix(in srgb,var(--accent2) 35%,var(--surface));border-color:var(--accent)}
 .fs-item{display:flex;gap:.6rem;align-items:center;padding:.5rem;border:2px solid var(--ink);border-radius:.75rem;background:var(--surface);transition:all .15s}
@@ -33,14 +31,11 @@ body[data-pattern="petals"] #bgPattern{background-image:radial-gradient(color-mi
 .fs-delete{background:#fff;border:1.5px solid var(--ink);border-radius:.4rem;width:26px;height:26px;display:grid;place-items:center;font-size:11px;cursor:pointer;flex-shrink:0;transition:all .15s}
 .fs-delete:hover{background:#FF4B2B;color:#fff}
 .fs-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;padding:1px 6px;border-radius:999px;border:1px solid currentColor;display:inline-block;opacity:.7}
-
-/* ═══ Offline indicator ═══ */
 #statusBadge{display:inline-flex;align-items:center;gap:.4rem;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;border:2px solid var(--ink);border-radius:999px;padding:3px 10px;background:var(--surface);transition:all .3s;backdrop-filter:blur(6px)}
 #statusBadge .dot{width:7px;height:7px;border-radius:50%;background:#22C55E;transition:background .3s}
 #statusBadge.offline{background:#FF4B2B;color:#fff;border-color:#fff}
 #statusBadge.offline .dot{background:#fff;animation:blinkDot 1s ease-in-out infinite}
 #statusBadge.online{background:color-mix(in srgb,var(--accent2) 80%,var(--surface))}
-
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
 .floaty{animation:floaty 5.5s ease-in-out infinite}
 @keyframes pulseBig{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
@@ -73,13 +68,9 @@ body[data-pattern="petals"] #bgPattern{background-image:radial-gradient(color-mi
 .op-scroll::-webkit-scrollbar{width:8px}
 .op-scroll::-webkit-scrollbar-thumb{background:var(--ink);border-radius:8px}
 .screen>.m-auto{margin:auto!important}
-
-/* Tab switcher di panel operator */
 .op-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:3px;background:var(--ink);border-radius:.75rem}
-.op-tab{padding:.45rem .2rem;border:none;background:transparent;color:var(--ink);font-weight:700;font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.05em;border-radius:.5rem;cursor:pointer;transition:all .15s}
-.op-tab.on{background:var(--surface);box-shadow:none}
+.op-tab{padding:.45rem .2rem;border:none;background:transparent;color:var(--bg);font-weight:700;font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.05em;border-radius:.5rem;cursor:pointer;transition:all .15s}
+.op-tab.on{background:var(--surface);box-shadow:none;color:var(--ink)}
 .op-pane{display:none}
 .op-pane.on{display:block;animation:fadeIn .25s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-.op-tab{color:var(--bg)}
-.op-tab.on{color:var(--ink)}
