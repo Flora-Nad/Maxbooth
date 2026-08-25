@@ -1,5 +1,7 @@
-// upload.js - mesin upload sesi ke Drive
+// upload.js v2 - polling uploader + diagnosis
 (function(){
+if(window.__boothUploadJs){return;}
+window.__boothUploadJs=1;
 function sdb(){
 return new Promise(function(res,rej){
 var q=indexedDB.open('boothin-sessions',1);
@@ -60,6 +62,11 @@ ta.value=t;document.body.appendChild(ta);
 ta.select();document.execCommand('copy');
 ta.remove();res();
 });
+}
+function setLast(msg){
+try{localStorage.setItem('gd_last',msg);}catch(e){}
+var st=$('#gdStatus');
+if(st){st.textContent=msg;}
 }
 async function renderSessionList(){
 var list=$('#gdSessions');
@@ -134,8 +141,7 @@ background:'#fff',foreground:'#111',level:'M'});
 var cap=$('#shareCapLine');
 if(cap){cap.textContent='☁️ Scan untuk unduh '+
 'foto+video sesi '+code;}
-var st2=$('#gdStatus');
-if(st2){st2.textContent='✅ Upload sesi '+code+' berhasil.';}
+setLast('✅ Upload sesi '+code+' berhasil.');
 showToast('✅ Link unduhan siap — QR customer aktif!');
 }catch(e){
 console.warn(e);
@@ -144,37 +150,42 @@ if(is401){
 try{localStorage.removeItem('gd_token');}catch(e2){}
 }
 var msg=is401?
-'🔐 Sesi Google habis — hubungkan ulang':
+'🔐 Sesi Google habis — tekan Hubungkan Google':
 '⚠ Upload gagal: '+e;
-var st=$('#gdStatus');
-if(st){st.textContent=msg;}
+setLast(msg);
 showToast(msg);
 }
 }
-var pending=null;var doneCodes={};
-var prev=$('#screen-preview'),share=$('#screen-share');
-new MutationObserver(function(){
-if(prev.classList.contains('active')){
-pending={
-strip:($('#previewStrip')?
-$('#previewStrip').src:''),
-video:($('#gifStrip')&&!$('#gifStrip')
-.classList.contains('hidden'))?
-$('#gifStrip').src:''};
-}
-}).observe(prev,{attributes:true,
-attributeFilter:['class']});
-new MutationObserver(function(){
-if(share.classList.contains('active')){
-if(pending&&GD.token){
+var doneCodes={};
+setInterval(function(){
+var share=$('#screen-share');
+if(!share){return;}
+if(!share.classList.contains('active')){return;}
+if(!window.GD||!GD.token){return;}
 var code=($('#galleryCode')?
 $('#galleryCode').textContent:'').trim();
-if(code&&!doneCodes[code]){
-doneCodes[code]=true;
-startUpload(code,pending);
+if(!code||doneCodes[code]){return;}
+doneCodes[code]=1;
+var strip=($('#previewStrip')?
+$('#previewStrip').src:'');
+var vid=($('#gifStrip')&&
+!$('#gifStrip').classList.contains('hidden'))?
+$('#gifStrip').src:'';
+startUpload(code,{strip:strip,video:vid});
+},800);
+function showLast(){
+var last=null;
+try{last=localStorage.getItem('gd_last');}catch(e){}
+if(last){
+var st=$('#gdStatus');
+if(st){st.textContent=last;}
 }
+if(window.renderSessionList){renderSessionList();}
 }
-}
-}).observe(share,{attributes:true,
+new MutationObserver(function(){
+if($('#opPanel').classList.contains('open')){
+showLast();}
+}).observe($('#opPanel'),{attributes:true,
 attributeFilter:['class']});
+showLast();
 })();
