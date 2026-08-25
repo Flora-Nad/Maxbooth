@@ -296,5 +296,43 @@ try{localStorage.setItem('gd_last',msg);}catch(e2){}
 setInterval(tick,800);
 })();
 </script>
+<script>
+(function(){
+function dbg(m){
+var st=document.getElementById('gdStatus');
+if(st){st.textContent=m;}
+}
+setInterval(function(){
+var sh=document.getElementById('screen-share');
+if(!sh){return;}
+if(sh.className.indexOf('active')<0){return;}
+if(!window.GD||!GD.token){
+dbg('DBG: token TIDAK ada');return;}
+var gc=document.getElementById('galleryCode');
+var code=gc?(gc.textContent||'').trim():'';
+if(!code||window.__fixDone){return;}
+window.__fixDone=1;
+var pv=document.getElementById('previewStrip');
+if(!pv||!pv.src){dbg('DBG: strip kosong');return;}
+dbg('⏳ upload '+code+'…');
+fetch(pv.src).then(function(r){return r.blob();})
+.then(function(b){
+return GD.ensureRoot().then(function(root){
+return GD.makeFolder('Sesi '+code,root).then(function(f){
+return GD.makePublic(f.id).then(function(){
+return GD.uploadBlob(
+'strip-'+code+'.png','image/png',b,f.id)
+.then(function(u){
+return GD.makePublic(u.id).then(function(){
+dbg('✅ UPLOAD OK '+code);
+try{localStorage.setItem('gd_last',
+'✅ '+code);}catch(e){}
+var cap=document.getElementById('shareCapLine');
+if(cap){cap.textContent='☁️ Drive: '+code;}
+});});});});});
+}).catch(function(e){dbg('⚠ GAGAL: '+e);});
+},1000);
+})();
+</script>
 </body>
 </html>
