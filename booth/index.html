@@ -243,59 +243,12 @@ tailwind.config = { theme: { extend: { fontFamily: {
 </aside>
 
 <div id="toast" class="fixed bottom-6 left-1/2 z-50 px-6 py-3.5 rounded-full border-[3px] border-[var(--ink)] font-semibold text-sm max-w-[92vw] text-center shadow-[var(--shadow)]" style="background:var(--ink);color:var(--bg)"></div>
-
 <script src="/booth/data.js?v=3"></script>
 <script src="/booth/app.js?v=8"></script>
 <script src="/booth/video.js?v=4"></script>
 <script src="/booth/media.js?v=2"></script>
 <script src="/booth/drive.js?v=5"></script>
 <script src="/booth/upload.js?v=3"></script>
-<script>
-(function(){
-async function tick(){
-try{
-var sh=document.getElementById('screen-share');
-if(!sh||sh.className.indexOf('active')<0){return;}
-var st=document.getElementById('gdStatus');
-if(!window.GD||!GD.token){
-if(st){st.textContent='⚠ Google belum terhubung — tekan Hubungkan Google.';}
-return;
-}
-var gc=document.getElementById('galleryCode');
-var code=gc?(gc.textContent||'').trim():'';
-if(!code||window.__doneCode===code){return;}
-window.__doneCode=code;
-var pv=document.getElementById('previewStrip');
-if(!pv||!pv.src){return;}
-if(st){st.textContent='⏳ Upload sesi '+code+'…';}
-var b=await (await fetch(pv.src)).blob();
-var root=await GD.ensureRoot();
-var fol=await GD.makeFolder('Sesi '+code,root);
-await GD.makePublic(fol.id);
-var f=await GD.uploadBlob(
-'strip-'+code+'.png','image/png',b,fol.id);
-await GD.makePublic(f.id);
-try{new QRious({
-element:document.getElementById('shareQr'),
-value:f.webViewLink,size:200,
-background:'#fff',foreground:'#111',
-level:'M'});}catch(e){}
-var cap=document.getElementById('shareCapLine');
-if(cap){cap.textContent='☁️ Scan untuk unduh '+
-'foto sesi '+code;}
-if(st){st.textContent='✅ Upload sesi '+code+' berhasil.';}
-try{localStorage.setItem('gd_last',
-'✅ '+code+' OK');}catch(e){}
-}catch(e){
-var msg='⚠ Upload gagal: '+e;
-var st2=document.getElementById('gdStatus');
-if(st2){st2.textContent=msg;}
-try{localStorage.setItem('gd_last',msg);}catch(e2){}
-}
-}
-setInterval(tick,800);
-})();
-</script>
 <script>
 (function(){
 function dbg(m){
@@ -318,15 +271,14 @@ dbg('⏳ upload '+code+'…');
 fetch(pv.src).then(function(r){return r.blob();})
 .then(function(b){
 return GD.ensureRoot().then(function(root){
-return GD.makeFolder('Sesi '+code,root).then(function(f){
+return GD.makeFolder('Sesi '+code,root)
+.then(function(f){
 return GD.makePublic(f.id).then(function(){
 return GD.uploadBlob(
 'strip-'+code+'.png','image/png',b,f.id)
 .then(function(u){
 return GD.makePublic(u.id).then(function(){
 dbg('✅ UPLOAD OK '+code);
-try{localStorage.setItem('gd_last',
-'✅ '+code);}catch(e){}
 var cap=document.getElementById('shareCapLine');
 if(cap){cap.textContent='☁️ Drive: '+code;}
 });});});});});
