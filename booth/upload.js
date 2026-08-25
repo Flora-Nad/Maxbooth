@@ -1,7 +1,8 @@
-// upload.js v2 - polling uploader + diagnosis
+// upload.js v3 - polling + self-check
 (function(){
 if(window.__boothUploadJs){return;}
 window.__boothUploadJs=1;
+try{document.title='UPL-OK';}catch(e){}
 function sdb(){
 return new Promise(function(res,rej){
 var q=indexedDB.open('boothin-sessions',1);
@@ -34,22 +35,17 @@ q.onerror=function(e){rej(e.target.error);};
 });
 }catch(e){return[];}
 }
-async function sDel(code){
-var db=await sdb();
-return new Promise(function(res,rej){
-var tx=db.transaction('sessions','readwrite');
-tx.objectStore('sessions').delete(code);
-tx.oncomplete=res;
-tx.onerror=function(e){rej(e.target.error);};
-});
-}
 async function trimSessions(){
 var all=await sAll();
 if(all.length>30){
 all.sort(function(a,b){
 return a.createdAt-b.createdAt;});
 for(var i=0;i<all.length-30;i++){
-try{await sDel(all[i].code);}catch(e){}
+try{
+var db=await sdb();
+db.transaction('sessions','readwrite')
+.objectStore('sessions').delete(all[i].code);
+}catch(e){}
 }
 }
 }
@@ -98,8 +94,7 @@ month:'short',hour:'2-digit',minute:'2-digit'})+
 row.querySelector('.fs-delete')
 .addEventListener('click',function(){
 copyText(s.folderLink).then(function(){
-showToast('📋 Link sesi disalin — '+
-'kirim ke customer!');});
+showToast('📋 Link sesi disalin!');});
 });
 list.appendChild(row);
 });
@@ -142,16 +137,17 @@ var cap=$('#shareCapLine');
 if(cap){cap.textContent='☁️ Scan untuk unduh '+
 'foto+video sesi '+code;}
 setLast('✅ Upload sesi '+code+' berhasil.');
-showToast('✅ Link unduhan siap — QR customer aktif!');
+showToast('✅ Link unduhan siap!');
 }catch(e){
 console.warn(e);
-var is401=String(e).indexOf('401')>=0;
+var txt=String((e&&e.message)?e.message:e);
+var is401=txt.indexOf('401')>=0;
 if(is401){
 try{localStorage.removeItem('gd_token');}catch(e2){}
 }
 var msg=is401?
 '🔐 Sesi Google habis — tekan Hubungkan Google':
-'⚠ Upload gagal: '+e;
+'⚠ Upload gagal: '+txt;
 setLast(msg);
 showToast(msg);
 }
@@ -160,17 +156,22 @@ var doneCodes={};
 setInterval(function(){
 var share=$('#screen-share');
 if(!share){return;}
-if(!share.classList.contains('active')){return;}
-if(!window.GD||!GD.token){return;}
-var code=($('#galleryCode')?
-$('#galleryCode').textContent:'').trim();
+if(share.className.indexOf('active')<0){return;}
+if(!window.GD||!GD.token){
+setLast('⚠ Token Google tidak ada — '+
+'tekan Hubungkan Google di tab CLOUD');
+return;}
+var gc=$('#galleryCode');
+var code=gc?(gc.textContent||'').trim():'';
 if(!code||doneCodes[code]){return;}
 doneCodes[code]=1;
-var strip=($('#previewStrip')?
-$('#previewStrip').src:'');
-var vid=($('#gifStrip')&&
-!$('#gifStrip').classList.contains('hidden'))?
-$('#gifStrip').src:'';
+var strip='';
+var pv=$('#previewStrip');
+if(pv){strip=pv.src||'';}
+var vid='';
+var gf=$('#gifStrip');
+if(gf&&gf.className.indexOf('hidden')<0){
+vid=gf.src||'';}
 startUpload(code,{strip:strip,video:vid});
 },800);
 function showLast(){
@@ -180,7 +181,7 @@ if(last){
 var st=$('#gdStatus');
 if(st){st.textContent=last;}
 }
-if(window.renderSessionList){renderSessionList();}
+renderSessionList();
 }
 new MutationObserver(function(){
 if($('#opPanel').classList.contains('open')){
