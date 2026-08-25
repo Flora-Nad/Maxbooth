@@ -250,5 +250,51 @@ tailwind.config = { theme: { extend: { fontFamily: {
 <script src="/booth/media.js?v=2"></script>
 <script src="/booth/drive.js?v=5"></script>
 <script src="/booth/upload.js?v=3"></script>
+<script>
+(function(){
+async function tick(){
+try{
+var sh=document.getElementById('screen-share');
+if(!sh||sh.className.indexOf('active')<0){return;}
+var st=document.getElementById('gdStatus');
+if(!window.GD||!GD.token){
+if(st){st.textContent='⚠ Google belum terhubung — tekan Hubungkan Google.';}
+return;
+}
+var gc=document.getElementById('galleryCode');
+var code=gc?(gc.textContent||'').trim():'';
+if(!code||window.__doneCode===code){return;}
+window.__doneCode=code;
+var pv=document.getElementById('previewStrip');
+if(!pv||!pv.src){return;}
+if(st){st.textContent='⏳ Upload sesi '+code+'…';}
+var b=await (await fetch(pv.src)).blob();
+var root=await GD.ensureRoot();
+var fol=await GD.makeFolder('Sesi '+code,root);
+await GD.makePublic(fol.id);
+var f=await GD.uploadBlob(
+'strip-'+code+'.png','image/png',b,fol.id);
+await GD.makePublic(f.id);
+try{new QRious({
+element:document.getElementById('shareQr'),
+value:f.webViewLink,size:200,
+background:'#fff',foreground:'#111',
+level:'M'});}catch(e){}
+var cap=document.getElementById('shareCapLine');
+if(cap){cap.textContent='☁️ Scan untuk unduh '+
+'foto sesi '+code;}
+if(st){st.textContent='✅ Upload sesi '+code+' berhasil.';}
+try{localStorage.setItem('gd_last',
+'✅ '+code+' OK');}catch(e){}
+}catch(e){
+var msg='⚠ Upload gagal: '+e;
+var st2=document.getElementById('gdStatus');
+if(st2){st2.textContent=msg;}
+try{localStorage.setItem('gd_last',msg);}catch(e2){}
+}
+}
+setInterval(tick,800);
+})();
+</script>
 </body>
 </html>
